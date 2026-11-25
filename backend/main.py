@@ -1,19 +1,24 @@
-from fastapi import FastAPI
+import os
+import uuid
+from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from pypinyin import lazy_pinyin, Style
 from snownlp import SnowNLP
 from datetime import datetime, timezone
 from storage import save_record, get_history, init_db
-import uuid
-from fastapi import Request, Response
+from dotenv import load_dotenv
+
+load_dotenv() 
+
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS").split(",")
 
 init_db()
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["GET", "POST"], 
     allow_credentials=True,
 )
